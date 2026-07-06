@@ -23,7 +23,7 @@ const cargar = async () => {
   ;(citas ?? []).forEach((c: any) => { conteo[c.fecha] = (conteo[c.fecha] ?? 0) + 1 })
   const dias = Object.keys(conteo).sort().slice(-7)
   labels.value = dias
-  valores.value = dias.map(d => conteo[d])
+  valores.value = dias.map(d => conteo[d] ?? 0)
 }
 
 onMounted(cargar)

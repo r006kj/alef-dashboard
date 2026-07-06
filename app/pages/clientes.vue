@@ -3,7 +3,13 @@ const supabase = useSupabaseClient()
 const clientes = ref<any[]>([])
 const search = ref('')
 const dialog = ref(false)
-const form = ref({ id: null, nombre: '', telefono: '', email: '', documento: '' })
+const form = ref<{ id: string | null; nombre: string; telefono: string; email: string; documento: string }>({
+  id: null,
+  nombre: '',
+  telefono: '',
+  email: '',
+  documento: '',
+})
 
 const headers = [
   { title: 'Nombre', key: 'nombre' },
@@ -33,7 +39,7 @@ const user = useSupabaseUser()
 
 const guardar = async () => {
   const { id, ...campos } = form.value
-  const query = form.value.id
+  const query = id
     ? supabase.from('clientes').update(campos).eq('id', id)
     : supabase.from('clientes').insert({ ...campos, user_id: user.value?.id })
 

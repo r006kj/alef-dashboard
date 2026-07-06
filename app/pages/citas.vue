@@ -5,7 +5,12 @@ const citas = ref<any[]>([])
 const error = ref('')
 const ok = ref('')
 const hoy = new Date().toISOString().slice(0, 10)
-const form = ref({ cliente_id: null, fecha: hoy, hora: '', servicio: '' })
+const form = ref<{ cliente_id: string | null; fecha: string; hora: string; servicio: string }>({
+  cliente_id: null,
+  fecha: hoy,
+  hora: '',
+  servicio: '',
+})
 
 const headers = [
   { title: 'Cliente', key: 'clientes.nombre' },
@@ -32,7 +37,9 @@ const cargarCitasHoy = async () => {
 const agendar = async () => {
   error.value = ''
   ok.value = ''
-  const { error: e } = await supabase.from('citas').insert({ ...form.value })
+  const { cliente_id, fecha, hora, servicio } = form.value
+  if (!cliente_id) { error.value = 'Selecciona un cliente.'; return }
+  const { error: e } = await supabase.from('citas').insert({ cliente_id, fecha, hora, servicio })
   if (e) {
     error.value = e.code === '23505'
       ? 'Ese horario ya está ocupado. Elige otra hora.'
